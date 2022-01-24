@@ -1,6 +1,11 @@
 name: UhcZelda
 version: 1.0
-main: me.anidwyd.uhczelda.UhcZelda
+main: me.anidwyd.uhczelda.UhcZeldaPlugin
 api-version: 1.17
 authors: [ Anidwyd ]
 description: A Zelda-like adaptation of UHC !
+commands:
+  zelda:
+    description: The command to handle uhczelda operations.
+  start:
+    description: The command to force start games.

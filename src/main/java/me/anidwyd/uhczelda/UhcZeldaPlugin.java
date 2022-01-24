@@ -1,7 +1,8 @@
 package me.anidwyd.uhczelda;
 
-import lombok.Getter;
-import me.anidwyd.uhczelda.game.GameManager;
+import me.anidwyd.uhczelda.commands.StartCommand;
+import me.anidwyd.uhczelda.commands.ZeldaBaseCommand;
+import me.anidwyd.uhczelda.managers.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,19 +10,17 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
 
-@Getter
-public final class UhcZelda extends JavaPlugin {
+public final class UhcZeldaPlugin extends JavaPlugin {
 
-    private static UhcZelda plugin;
     private GameManager gameManager;
 
     @Override
     public void onEnable() {
-        plugin = this;
-        gameManager = new GameManager();
+        gameManager = new GameManager(this);
 
-        // register listeners
+        // register events
         String packageName = getClass().getPackage().getName();
+
         for (Class<?> clazz : new Reflections(packageName + ".listeners")
                 .getSubTypesOf(Listener.class)
         ) {
@@ -29,11 +28,15 @@ public final class UhcZelda extends JavaPlugin {
                 Listener listener = (Listener) clazz
                         .getDeclaredConstructor()
                         .newInstance();
-                getServer().getPluginManager().registerEvents(listener, plugin);
+                getServer().getPluginManager().registerEvents(listener, this);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
         }
+
+        // commands
+        getCommand("zelda").setExecutor(new ZeldaBaseCommand());
+        getCommand("start").setExecutor(new StartCommand());
 
         // Plugin startup logic
         System.out.println("[ZeldaUHC] Plugin enabled.");
@@ -42,6 +45,8 @@ public final class UhcZelda extends JavaPlugin {
     @Override
     public void onDisable() {
         Bukkit.getLogger().info("[ZeldaUHC] Plugin disabled.");
+
+        gameManager.cleanup();
     }
 
 }

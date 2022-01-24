@@ -1,4 +1,4 @@
-package me.anidwyd.uhczelda.players;
+package me.anidwyd.uhczelda.managers;
 
 import org.bukkit.ChatColor;
 

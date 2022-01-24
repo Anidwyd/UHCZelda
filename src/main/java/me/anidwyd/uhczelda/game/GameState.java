@@ -1,10 +1,12 @@
 package me.anidwyd.uhczelda.game;
 
-public enum GameState {
-    LOADING,
-    WAITING,
-    STARTING,
-    PLAYING,
-    DEATHMATCH,
-    ENDED
+import org.bukkit.event.Listener;
+
+public abstract class GameState implements Listener {
+
+    public void onEnable() {}
+
+    public void onDisable() {}
+
+    public abstract GameState getNextState();
 }
